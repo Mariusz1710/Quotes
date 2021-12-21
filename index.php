@@ -147,11 +147,19 @@ if(isset($_POST['quotetext']))
 
 if(isset($_GET['deletejoke']))
 {
-	echo $_POST['id']."<br>";
-	echo $_POST['quotetext']."<br>";
-	echo $_POST['name']."<br>";
-	echo $_POST['email']."<br>";
+	try
+	{
+		$sql_delete = "DELETE FROM quote WHERE id = ".$_POST['id'];
+		$conn -> query($sql_delete);
+	}
+	catch(PDOException $e)
+	{
+		$error = "Error during deleting the joke";
+		include 'error.html.php';
+		exit();
+	}
 
+	header('Location: .');
 	exit();
 }
 

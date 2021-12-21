@@ -21,13 +21,13 @@ foreach($quotes as $quote):
 
 <?php
 		
-		echo $quote['quotetext'].' ';
+		echo '<p>'.$quote['quotetext'].' ';
 
 ?>
 
 		Send by: <a href="mailto: <?php echo $quote['email']; ?>"><?php echo $quote['name']; ?></a>
 		<input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
-		<input type="submit" value="Delete">
+		<input type="submit" value="Delete"></p>
 
 	</form>
 
