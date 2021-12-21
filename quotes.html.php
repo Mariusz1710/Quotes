@@ -13,17 +13,25 @@
 
 <?php
 
-foreach($quotes as $quote)
-{
-	echo '<p>'.$quote.'</p>';
-}
-
-
+foreach($quotes as $quote):
 
 ?>
 
+	<form action="?deletejoke" method="post">
 
+<?php
+		
+		echo $quote['quotetext'].' ';
 
+?>
+
+		Send by: <a href="mailto: <?php echo $quote['email']; ?>"><?php echo $quote['name']; ?></a>
+		<input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
+		<input type="submit" value="Delete">
+
+	</form>
+
+<?php endforeach; ?>
 
 
 </body>

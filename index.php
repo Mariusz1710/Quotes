@@ -41,12 +41,14 @@ if(isset($_POST['quotetext']))
 	{	
 		$sql_author = "SELECT id, name FROM author";
 		$result = $conn -> query($sql_author);
-		
+		$how_authors = $result -> rowCount();
 		foreach($result as $row)
 		{
 			if($row['name'] == $author)
-			{	
+			{
 				$id = $row['id'];
+				$new = false;
+				break;
 			}
 			else
 			{
@@ -66,11 +68,11 @@ if(isset($_POST['quotetext']))
 				$s -> bindValue(":author",$author);
 				$s -> execute();
 
-				$sql2 = 'INSERT INTO email VALUES (NULL, :email,:authorid)';
+				/*$sql2 = 'INSERT INTO email VALUES (NULL, :email,:authorid)';
 				$s = $conn -> prepare($sql2);
 				$s -> bindValue(":email",$email);
 				$s -> bindValue(":authorid",$id);
-				$s -> execute();
+				$s -> execute();*/
 			}
 			catch(PDOException)
 			{
@@ -78,6 +80,40 @@ if(isset($_POST['quotetext']))
 				include 'error.html.php';
 				exit();
 			}
+		}
+
+		try
+		{
+			$sql_email = "SELECT email FROM email";
+			$result = $conn -> query($sql_email);
+
+			foreach($result as $row)
+			{
+				if($row['email'] == $email)
+				{
+					$newm = false;
+					break;
+				}
+				else
+				{
+					$newm = true;
+				}
+			}
+
+			if($newm)
+			{
+				$sql2 = "INSERT INTO email VALUES (NULL, :email, :authorid)";
+				$s = $conn -> prepare($sql2);
+				$s -> bindValue(":email", $email);
+				$s -> bindValue(":authorid", $id);
+				$s -> execute();
+			}
+		}
+		catch(PDOException $e)
+		{
+			$error = "Error during adding an email";
+			include 'error.html.php';
+			exit();
 		}
 
 		try
@@ -104,13 +140,24 @@ if(isset($_POST['quotetext']))
 		exit();
 	}
 
+
 	header('Location: .');
+	exit();
+}
+
+if(isset($_GET['deletejoke']))
+{
+	echo $_POST['id']."<br>";
+	echo $_POST['quotetext']."<br>";
+	echo $_POST['name']."<br>";
+	echo $_POST['email']."<br>";
+
 	exit();
 }
 
 try
 {
-	$sql = "SELECT id,quotetext FROM quote";
+	$sql = "SELECT quote.id, quotetext, name, email FROM quote INNER JOIN author ON quote.authorid = author.id INNER JOIN email ON author.id = email.authorid";
 	$result = $conn -> query($sql);
 }
 catch(PDOException $e)
@@ -123,7 +170,7 @@ catch(PDOException $e)
 foreach($result as $row)
 {
 
-	$quotes [] = $row['quotetext'];
+	$quotes [] = array('id' => $row['id'], 'quotetext' => $row['quotetext'], 'name' => $row['name'], 'email' => $row['email']);
 
 }
 
