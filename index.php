@@ -37,6 +37,7 @@ if(isset($_POST['quotetext']))
 	$author = $_POST['author'];
 	$email = $_POST['email'];
 
+
 	try
 	{	
 		$sql_author = "SELECT id, name FROM author";
@@ -116,6 +117,7 @@ if(isset($_POST['quotetext']))
 			exit();
 		}
 
+
 		try
 		{
 			$sql = 'INSERT INTO quote VALUES (NULL,:quote,CURRENT_DATE,:authorid)';
@@ -123,6 +125,37 @@ if(isset($_POST['quotetext']))
 			$s -> bindValue(":quote",$quotetext);
 			$s -> bindValue(":authorid",$id);
 			$s -> execute();
+
+			$sql2 = 'SELECT COUNT(*) FROM quote';
+			$result2 = $conn -> query($sql2);
+			$how_many = $result2 -> fetchColumn();
+			$how_many++;
+
+
+			foreach($_POST['category'] as $category)
+			{
+				$sql3 = 'SELECT * FROM category';
+				$res_cat = $conn -> query($sql3);
+
+
+				foreach($res_cat as $cat)
+				{
+					if($category == $cat['name'])
+					{
+						$idcat = $cat['id'];
+					}
+					else
+					{
+						//echo $i."NOT<br>";
+					}
+
+				
+				}
+
+				$sql4 = 'INSERT INTO quotecategory VALUES ('.$how_many.','.$idcat.')';
+				$conn -> exec($sql4);
+			}
+
 		}
 		catch(PDOException $e)
 		{

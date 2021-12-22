@@ -18,7 +18,7 @@
 </head>
 <body>
 
-<form action="?" method="post" name="adding_quote">
+<form action="?" method="post">
 
 	<p><label for="quotetext">Enter a quote</label></p>
 
@@ -35,13 +35,10 @@
 	<p><label for="email">Enter your email</label>
 	<input type="email" name="email"></p>
 
-	<p><input type="submit" value="Add"><p>
 
-</form>
+	<p><label for="category">Enter first category</label></p>
 
-<label for="category">Enter first category</label>
-
-<select id="category" name="category_list" form="adding_quote" multiple size=2>
+<select id="category" name="category[]" multiple size=6>
 
 	<option value="politician">Politician</option>
 	<option value="scientist">Scientist</option>
@@ -57,6 +54,12 @@
 	<option value="businessman">Businessman</option>
 
 </select>
+
+	<p><input type="submit" value="Add"><p>
+
+</form>
+
+
 
 </body>
 </html>
