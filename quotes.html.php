@@ -13,6 +13,8 @@
 
 <?php
 
+include 'includes/helpers.inc.php';
+
 foreach($quotes as $quote):
 
 ?>
@@ -25,7 +27,7 @@ foreach($quotes as $quote):
 
 ?>
 
-		Send by: <a href="mailto: <?php echo $quote['email']; ?>"><?php echo $quote['name']; ?></a>
+		Send by: <a href="mailto: <?php echo htmlspecialchars($quote['email'],ENT_QUOTES,'UTF-8'); ?>"><?php echo $quote['name']; ?></a>
 		<input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
 		<input type="submit" value="Delete"></p>
 

@@ -18,7 +18,7 @@ if(isset($_GET['addjoke']))
 	exit();
 }
 
-try
+/*try
 {
 	$conn = new PDO("mysql: host=localhost;dbname=quotes","root","");
 	$conn -> setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -30,9 +30,11 @@ catch(PDOException $e)
 	include "error.html.php";
 	exit();
 }
-
+*/
 if(isset($_POST['quotetext']))
 {
+	include 'includes/db.inc.php';
+
 	$quotetext = $_POST['quotetext'];
 	$author = $_POST['author'];
 	$email = $_POST['email'];
@@ -54,7 +56,7 @@ if(isset($_POST['quotetext']))
 			else
 			{
 				$new = true;
-				$id = $result -> rowCount();
+				$id = $row['id'];
 				$id++;
 			}
 		}
@@ -126,10 +128,13 @@ if(isset($_POST['quotetext']))
 			$s -> bindValue(":authorid",$id);
 			$s -> execute();
 
-			$sql2 = 'SELECT COUNT(*) FROM quote';
+			$sql2 = 'SELECT id FROM quote';
 			$result2 = $conn -> query($sql2);
-			$how_many = $result2 -> fetchColumn();
-			$how_many++;
+			
+			foreach($result2 as $row)
+			{
+				$how_many = $row['id'];
+			}
 
 
 			foreach($_POST['category'] as $category)
@@ -180,6 +185,8 @@ if(isset($_POST['quotetext']))
 
 if(isset($_GET['deletejoke']))
 {
+	include 'includes/db.inc.php';
+
 	try
 	{
 		$sql_delete = "DELETE FROM quote WHERE id = ".$_POST['id'];
@@ -198,6 +205,7 @@ if(isset($_GET['deletejoke']))
 
 try
 {
+	include 'includes/db.inc.php';
 	$sql = "SELECT quote.id, quotetext, name, email FROM quote INNER JOIN author ON quote.authorid = author.id INNER JOIN email ON author.id = email.authorid";
 	$result = $conn -> query($sql);
 }
